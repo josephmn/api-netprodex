@@ -38,6 +38,12 @@ public class CustomerController {
         }
     }
 
+    @Operation(summary = "Get customers by id", description = "Customers by id from BD")
+    @GetMapping(value = "/findById/{id}", produces = "application/json")
+    public ResponseEntity<CustomerEntity> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(this.customerService.findById(id));
+    }
+
     @Operation(summary = "Registry one customer", description = "Save one customer in BD")
     @PostMapping(value = "/save", produces = "application/json")
     public ResponseEntity<CustomerEntity> saveCustomer(@RequestBody CustomerEntity customer) {
