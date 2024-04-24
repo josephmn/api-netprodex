@@ -53,4 +53,14 @@ public class CustomerController {
         return ResponseEntity.badRequest().build();
     }
 
+    @Operation(summary = "Delete one customer", description = "Delete one customer in BD")
+    @DeleteMapping(value = "/delete/{id}", produces = "application/json")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
+        if (this.customerService.exists(id)) {
+            this.customerService.deleteCustomer(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
 }
