@@ -29,12 +29,17 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerEntity updateCustomer(Integer id, CustomerEntity customer) {
+    public CustomerEntity updateCustomer(CustomerEntity customer) {
         return this.customerRepository.save(customer);
     }
 
     @Override
     public void deleteCustomer(Integer id) {
         this.customerRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean exists(Integer id) {
+        return this.customerRepository.existsById(id);
     }
 }

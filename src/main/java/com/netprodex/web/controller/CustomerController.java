@@ -1,7 +1,7 @@
 package com.netprodex.web.controller;
 
 import com.netprodex.persistence.entity.CustomerEntity;
-import com.netprodex.service.impl.CustomerServiceImpl;
+import com.netprodex.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -18,19 +18,19 @@ import java.util.List;
 @Tag(name = "Customer", description = "Endpoint for customer")
 public class CustomerController {
 
-    private final CustomerServiceImpl customerServiceImpl;
+    private final CustomerService customerService;
     private final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @Autowired
-    public CustomerController(CustomerServiceImpl customerServiceImpl) {
-        this.customerServiceImpl = customerServiceImpl;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @Operation(summary = "Get all customers", description = "Listing customers from BD")
     @GetMapping(value = "/all", produces = "application/json")
     public ResponseEntity<List<CustomerEntity>> findAllCustomer() {
         logger.info("Get controller all customer");
-        List<CustomerEntity> customer = this.customerServiceImpl.findAllCustomer();
+        List<CustomerEntity> customer = this.customerService.findAllCustomer();
         if (customer.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
@@ -38,10 +38,19 @@ public class CustomerController {
         }
     }
 
-    @Operation(summary = "Registry one customer")
+    @Operation(summary = "Registry one customer", description = "Save one customer in BD")
     @PostMapping(value = "/save", produces = "application/json")
     public ResponseEntity<CustomerEntity> saveCustomer(@RequestBody CustomerEntity customer) {
-        return new ResponseEntity<>(this.customerServiceImpl.saveCustomer(customer), HttpStatus.CREATED);
+        return new ResponseEntity<>(this.customerService.saveCustomer(customer), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Update one customer", description = "Update one customer in BD")
+    @PutMapping(value = "/update", produces = "application/json")
+    public ResponseEntity<CustomerEntity> updateCustomer(@RequestBody CustomerEntity customer) {
+        if (customer.getIdCustomer() != null && this.customerService.exists(customer.getIdCustomer())) {
+            return ResponseEntity.ok(this.customerService.updateCustomer(customer));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }
