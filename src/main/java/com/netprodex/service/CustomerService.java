@@ -1,15 +1,14 @@
 package com.netprodex.service;
 
-import com.netprodex.persistence.entity.CustomerEntity;
+import com.netprodex.persistence.Cliente;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CustomerService {
-    List<CustomerEntity> findAllCustomer();
-    CustomerEntity findById(Integer id);
-    CustomerEntity saveCustomer(CustomerEntity customer);
-    CustomerEntity updateCustomer(CustomerEntity customer);
+    List<Cliente> findAllCustomer();
+    Cliente findById(Integer id);
+    Cliente saveCustomer(Cliente customer);
+    Cliente updateCustomer(Cliente customer);
     void deleteCustomer(Integer id);
     boolean exists(Integer id);
 }

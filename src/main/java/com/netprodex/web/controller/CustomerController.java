@@ -1,6 +1,6 @@
 package com.netprodex.web.controller;
 
-import com.netprodex.persistence.entity.CustomerEntity;
+import com.netprodex.persistence.Cliente;
 import com.netprodex.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,9 +28,9 @@ public class CustomerController {
 
     @Operation(summary = "Get all customers", description = "Listing customers from BD")
     @GetMapping(value = "/all", produces = "application/json")
-    public ResponseEntity<List<CustomerEntity>> findAllCustomer() {
-        logger.info("Get controller all customer");
-        List<CustomerEntity> customer = this.customerService.findAllCustomer();
+    public ResponseEntity<List<Cliente>> findAllCustomer() {
+        // logger.info("Get controller all customer");
+        List<Cliente> customer = this.customerService.findAllCustomer();
         if (customer.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
@@ -40,21 +40,21 @@ public class CustomerController {
 
     @Operation(summary = "Get customers by id", description = "Customers by id from BD")
     @GetMapping(value = "/findById/{id}", produces = "application/json")
-    public ResponseEntity<CustomerEntity> findById(@PathVariable Integer id) {
+    public ResponseEntity<Cliente> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(this.customerService.findById(id));
     }
 
     @Operation(summary = "Registry one customer", description = "Save one customer in BD")
     @PostMapping(value = "/save", produces = "application/json")
-    public ResponseEntity<CustomerEntity> saveCustomer(@RequestBody CustomerEntity customer) {
-        return new ResponseEntity<>(this.customerService.saveCustomer(customer), HttpStatus.CREATED);
+    public ResponseEntity<Cliente> saveCustomer(@RequestBody Cliente cliente) {
+        return new ResponseEntity<>(this.customerService.saveCustomer(cliente), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update one customer", description = "Update one customer in BD")
     @PutMapping(value = "/update", produces = "application/json")
-    public ResponseEntity<CustomerEntity> updateCustomer(@RequestBody CustomerEntity customer) {
-        if (customer.getIdCustomer() != null && this.customerService.exists(customer.getIdCustomer())) {
-            return ResponseEntity.ok(this.customerService.updateCustomer(customer));
+    public ResponseEntity<Cliente> updateCustomer(@RequestBody Cliente cliente) {
+        if (cliente.getCustomerId() != null && this.customerService.exists(cliente.getCustomerId())) {
+            return ResponseEntity.ok(this.customerService.updateCustomer(cliente));
         }
         return ResponseEntity.badRequest().build();
     }
