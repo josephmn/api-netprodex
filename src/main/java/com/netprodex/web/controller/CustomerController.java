@@ -1,12 +1,14 @@
 package com.netprodex.web.controller;
 
 import com.netprodex.persistence.Cliente;
+import com.netprodex.persistence.entity.CustomerEntity;
 import com.netprodex.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +40,16 @@ public class CustomerController {
         }
     }
 
+    @Operation(summary = "Pagination all customers", description = "Pagination all customers from BD")
+    @GetMapping(value = "/page", produces = "application/json")
+    public ResponseEntity<Page<Cliente>> pageAllCustomer(@RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "3") int elements) {
+        return ResponseEntity.ok(this.customerService.pageAllCustomer(page, elements));
+    }
+
     @Operation(summary = "Get customers by id", description = "Customers by id from BD")
     @GetMapping(value = "/findById/{id}", produces = "application/json")
-    public ResponseEntity<Cliente> findById(@PathVariable Integer id) {
+    public ResponseEntity<Cliente> findById(@PathVariable int id) {
         return ResponseEntity.ok(this.customerService.findById(id));
     }
 
@@ -61,7 +70,7 @@ public class CustomerController {
 
     @Operation(summary = "Delete one customer", description = "Delete one customer in BD")
     @DeleteMapping(value = "/delete/{id}", produces = "application/json")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteCustomer(@PathVariable int id) {
         if (this.customerService.exists(id)) {
             this.customerService.deleteCustomer(id);
             return ResponseEntity.ok().build();

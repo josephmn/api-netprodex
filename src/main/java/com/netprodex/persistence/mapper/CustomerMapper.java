@@ -3,6 +3,8 @@ package com.netprodex.persistence.mapper;
 import com.netprodex.persistence.Cliente;
 import com.netprodex.persistence.entity.CustomerEntity;
 import org.mapstruct.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 
@@ -19,7 +21,14 @@ public interface CustomerMapper {
     })
     Cliente toCliente(CustomerEntity customer);
 
-    List<Cliente> toCustomers(List<CustomerEntity> customers);
+    List<Cliente> toClientes(List<CustomerEntity> customers);
+
+    //Page<Cliente> toCustomersPage(Page<CustomerEntity> customersPage);
+
+    default Page<Cliente> toCustomersPage(Page<CustomerEntity> customersPage) {
+        List<Cliente> clienteList = toClientes(customersPage.getContent());
+        return new PageImpl<>(clienteList, customersPage.getPageable(), customersPage.getTotalElements());
+    }
 
     @InheritInverseConfiguration
     CustomerEntity toCustomerEntity(Cliente cliente);

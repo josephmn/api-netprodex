@@ -3,9 +3,13 @@ package com.netprodex.service.impl;
 import com.netprodex.persistence.Cliente;
 import com.netprodex.persistence.entity.CustomerEntity;
 import com.netprodex.persistence.mapper.CustomerMapper;
+import com.netprodex.persistence.repository.CustomerPagSortRepository;
 import com.netprodex.persistence.repository.CustomerRepository;
 import com.netprodex.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,22 +19,30 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerPagSortRepository customerPagSortRepository;
     private final CustomerMapper mapper;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper mapper) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerPagSortRepository customerPagSortRepository, CustomerMapper mapper) {
         this.customerRepository = customerRepository;
+        this.customerPagSortRepository = customerPagSortRepository;
         this.mapper = mapper;
     }
 
     @Override
     public List<Cliente> findAllCustomer() {
         List<CustomerEntity> customers = this.customerRepository.findAll();
-        return mapper.toCustomers(customers);
+        return mapper.toClientes(customers);
     }
 
     @Override
-    public Cliente findById(Integer id) {
+    public Page<Cliente> pageAllCustomer(int page, int elements) {
+        Pageable pageRequest = PageRequest.of(page, elements);
+        return mapper.toCustomersPage(this.customerPagSortRepository.findAll(pageRequest));
+    }
+
+    @Override
+    public Cliente findById(int id) {
         Optional<CustomerEntity> customer = this.customerRepository.findById(id);
 
         if (customer.isPresent()) {
@@ -53,12 +65,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(Integer id) {
+    public void deleteCustomer(int id) {
         this.customerRepository.deleteById(id);
     }
 
     @Override
-    public boolean exists(Integer id) {
+    public boolean exists(int id) {
         return this.customerRepository.existsById(id);
     }
 }
