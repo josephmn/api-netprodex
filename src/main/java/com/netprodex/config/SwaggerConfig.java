@@ -1,4 +1,4 @@
-package com.netprodex.web.config;
+package com.netprodex.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -19,7 +19,7 @@ public class SwaggerConfig {
                                 .email("josephcarlos.jcmn@gmail.com")
                                 .url("https://www.linkedin.com/in/joseph-magallanes-nolazco/")
                         )
-                        .description("Application Backend NetProdex with BD PostgreSQL")
+                        .description("Application Backend NetProdex with BD MySQL")
                 );
     }
 }
