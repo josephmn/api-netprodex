@@ -2,13 +2,17 @@ package com.netprodex.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,11 +30,27 @@ import java.util.List;
 public class SecurityConfig {
 
     /** SECURITY FILTER CHAIN
-     *
+     * Aqui se colocan las condiciones de seguridad
+     * csrf -> Cross-site request forgery (La falsificación de petición en sitios cruzados) - vulnerabilidad Web
+     * httpBasic -> usado solo para user y password
+     * STATELESS -> no guardamos session en memoria
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.build();
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable) //disable csrf
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(sets -> sets.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(http -> {
+                        // Configure endpoint public
+                        http.requestMatchers(HttpMethod.GET, "/api/v1/customer/all").permitAll();
+                        // Configure endpoint private
+                        http.requestMatchers(HttpMethod.GET, "/api/v1/customer/page").hasAuthority("CREATE");
+                        // Configure all endpoint not specific
+                        // http.anyRequest().authenticated(); -> no recomendado, trabaja con autenticacion
+                        http.anyRequest().denyAll();
+                })
+                .build();
     }
 
     /** AUTHENTICATION MANAGER
