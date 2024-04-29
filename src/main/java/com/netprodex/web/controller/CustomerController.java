@@ -4,6 +4,7 @@ import com.netprodex.persistence.Cliente;
 import com.netprodex.persistence.entity.CustomerEntity;
 import com.netprodex.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customer")
-@PreAuthorize("denyAll()")
 @Tag(name = "Customer", description = "Endpoint for customer")
+//@SecurityRequirement(name = "netprodex")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -32,7 +33,6 @@ public class CustomerController {
 
     @Operation(summary = "Get all customers", description = "Listing customers from BD")
     @GetMapping(value = "/all", produces = "application/json")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<List<Cliente>> findAllCustomer() {
         // logger.info("Get controller all customer");
         List<Cliente> customer = this.customerService.findAllCustomer();
@@ -45,7 +45,6 @@ public class CustomerController {
 
     @Operation(summary = "Pagination all customers", description = "Pagination all customers from BD")
     @GetMapping(value = "/page", produces = "application/json")
-    @PreAuthorize("hasAuthority('READ')")
     public ResponseEntity<Page<Cliente>> pageAllCustomer(@RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "3") int elements) {
         return ResponseEntity.ok(this.customerService.pageAllCustomer(page, elements));
@@ -59,7 +58,6 @@ public class CustomerController {
 
     @Operation(summary = "Registry one customer", description = "Save one customer in BD")
     @PostMapping(value = "/save", produces = "application/json")
-    @PreAuthorize("hasAuthority('CREATE')")
     public ResponseEntity<Cliente> saveCustomer(@RequestBody Cliente cliente) {
         return new ResponseEntity<>(this.customerService.saveCustomer(cliente), HttpStatus.CREATED);
     }
