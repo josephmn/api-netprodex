@@ -1,5 +1,6 @@
 package com.netprodex.config;
 
+import com.netprodex.service.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -73,17 +74,17 @@ public class SecurityConfig {
      * Necesario: PasswordEncoder y UserDetailsService
      */
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(UserDetailServiceImpl userDetailService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(userDetailService);
         return provider;
     }
 
     /** UserDetailsService
      * Simulando que traendo 2 usuarios de la base de datos
      */
-    @Bean
+    /*@Bean
     public UserDetailsService userDetailsService() {
         List<UserDetails> userDetailsList = new ArrayList<>();
 
@@ -100,7 +101,7 @@ public class SecurityConfig {
                 .build());
 
         return new InMemoryUserDetailsManager(userDetailsList);
-    }
+    }*/
 
     /** PasswordEncoder
      * NoOpPasswordEncoder -> solo para test o pruebas
