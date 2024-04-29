@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customer")
+@PreAuthorize("denyAll()")
 @Tag(name = "Customer", description = "Endpoint for customer")
 public class CustomerController {
 
@@ -30,6 +32,7 @@ public class CustomerController {
 
     @Operation(summary = "Get all customers", description = "Listing customers from BD")
     @GetMapping(value = "/all", produces = "application/json")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<Cliente>> findAllCustomer() {
         // logger.info("Get controller all customer");
         List<Cliente> customer = this.customerService.findAllCustomer();
@@ -42,6 +45,7 @@ public class CustomerController {
 
     @Operation(summary = "Pagination all customers", description = "Pagination all customers from BD")
     @GetMapping(value = "/page", produces = "application/json")
+    @PreAuthorize("hasAuthority('READ')")
     public ResponseEntity<Page<Cliente>> pageAllCustomer(@RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "3") int elements) {
         return ResponseEntity.ok(this.customerService.pageAllCustomer(page, elements));
@@ -55,6 +59,7 @@ public class CustomerController {
 
     @Operation(summary = "Registry one customer", description = "Save one customer in BD")
     @PostMapping(value = "/save", produces = "application/json")
+    @PreAuthorize("hasAuthority('CREATE')")
     public ResponseEntity<Cliente> saveCustomer(@RequestBody Cliente cliente) {
         return new ResponseEntity<>(this.customerService.saveCustomer(cliente), HttpStatus.CREATED);
     }

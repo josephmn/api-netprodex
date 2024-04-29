@@ -35,7 +35,7 @@ public class SecurityConfig {
      * httpBasic -> usado solo para user y password
      * STATELESS -> no guardamos session en memoria
      */
-    @Bean
+    /*@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable) //disable csrf
@@ -50,6 +50,14 @@ public class SecurityConfig {
                         // http.anyRequest().authenticated(); -> no recomendado, trabaja con autenticacion
                         http.anyRequest().denyAll();
                 })
+                .build();
+    }*/
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(sets -> sets.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
 
