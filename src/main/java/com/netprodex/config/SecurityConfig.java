@@ -66,9 +66,9 @@ public class SecurityConfig {
                         // Configure endpoint public
                         http.requestMatchers("/api/v1/auth/**").permitAll();
                         http.requestMatchers(HttpMethod.GET, "/api/v1/customer/**").hasAnyRole("ADMIN","USER","INVITED","DEVELOPER");
-                        http.requestMatchers(HttpMethod.POST, "/api/v1/customer/*").hasAnyRole("ADMIN","DEVELOPER");
-                        http.requestMatchers(HttpMethod.PUT, "/api/v1/customer/*").hasAnyRole("ADMIN","DEVELOPER");
-                        http.requestMatchers(HttpMethod.DELETE, "/api/v1/customer/*").hasAnyRole("ADMIN","DEVELOPER");
+                        http.requestMatchers(HttpMethod.POST, "/api/v1/customer/**").hasAnyRole("ADMIN","DEVELOPER");
+                        http.requestMatchers(HttpMethod.PUT, "/api/v1/customer/**").hasAnyRole("ADMIN","DEVELOPER");
+                        http.requestMatchers(HttpMethod.DELETE, "/api/v1/customer/**").hasAnyRole("ADMIN","DEVELOPER");
                         // Configure endpoint private
                         // http.requestMatchers(HttpMethod.POST, "/api/v1/customer/*").hasAuthority("CREATE");
                         // Configure all endpoint not specific

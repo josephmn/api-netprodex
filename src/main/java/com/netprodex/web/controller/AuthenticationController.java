@@ -1,6 +1,7 @@
 package com.netprodex.web.controller;
 
 import com.netprodex.service.UserDetailServiceImpl;
+import com.netprodex.web.dto.AuthCreateUserRequest;
 import com.netprodex.web.dto.AuthLoginRequest;
 import com.netprodex.web.dto.AuthResponse;
 import jakarta.validation.Valid;
@@ -21,6 +22,11 @@ public class AuthenticationController {
     @Autowired
     public AuthenticationController(UserDetailServiceImpl userDetailService) {
         this.userDetailService = userDetailService;
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<AuthResponse> signup(@RequestBody @Valid AuthCreateUserRequest authCreateUser) {
+        return new ResponseEntity<>(this.userDetailService.createUser(authCreateUser), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
