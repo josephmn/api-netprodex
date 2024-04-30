@@ -59,11 +59,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable) //disable csrf
-                .httpBasic(Customizer.withDefaults())
+                //.httpBasic(Customizer.withDefaults())
                 .sessionManagement(sets -> sets.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                         http.requestMatchers(publicEndpoints()).permitAll();
                         // Configure endpoint public
+                        http.requestMatchers("/api/v1/auth/**").permitAll();
                         http.requestMatchers(HttpMethod.GET, "/api/v1/customer/**").hasAnyRole("ADMIN","USER","INVITED","DEVELOPER");
                         http.requestMatchers(HttpMethod.POST, "/api/v1/customer/*").hasAnyRole("ADMIN","DEVELOPER");
                         http.requestMatchers(HttpMethod.PUT, "/api/v1/customer/*").hasAnyRole("ADMIN","DEVELOPER");
