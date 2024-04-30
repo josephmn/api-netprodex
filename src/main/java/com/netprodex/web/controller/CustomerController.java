@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/customer")
 @Tag(name = "Customer", description = "Endpoint for customer")
-//@SecurityRequirement(name = "netprodex")
+@SecurityRequirement(name = "BearerAuth")
 public class CustomerController {
 
     private final CustomerService customerService;

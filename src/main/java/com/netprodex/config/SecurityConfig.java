@@ -39,7 +39,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // para configurar por anotaciones
-//@SecurityScheme(name="netprodex", scheme = "BasicAuth", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
+@SecurityScheme(name="BearerAuth", scheme="bearer", type = SecuritySchemeType.HTTP, bearerFormat="JWT", in = SecuritySchemeIn.HEADER)
 public class SecurityConfig {
 
     private final JwtUtils jwtUtils;
