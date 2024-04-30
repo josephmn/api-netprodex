@@ -1,9 +1,12 @@
 package com.netprodex.config;
 
+import com.netprodex.config.filter.JwtTokenValidator;
 import com.netprodex.service.UserDetailServiceImpl;
+import com.netprodex.util.JwtUtils;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,6 +28,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -37,6 +41,13 @@ import java.util.List;
 @EnableMethodSecurity // para configurar por anotaciones
 //@SecurityScheme(name="netprodex", scheme = "BasicAuth", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class SecurityConfig {
+
+    private final JwtUtils jwtUtils;
+
+    @Autowired
+    public SecurityConfig(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
 
     /** SECURITY FILTER CHAIN
      * Aqui se colocan las condiciones de seguridad
@@ -63,6 +74,7 @@ public class SecurityConfig {
                         // http.anyRequest().authenticated(); -> no recomendado, trabaja con autenticacion
                         http.anyRequest().denyAll();
                 })
+                .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
 
