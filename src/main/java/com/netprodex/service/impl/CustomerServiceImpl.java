@@ -1,5 +1,7 @@
 package com.netprodex.service.impl;
 
+import com.netprodex.exception.BadRequestException;
+import com.netprodex.exception.ResourceNotFoundException;
 import com.netprodex.persistence.Cliente;
 import com.netprodex.persistence.entity.CustomerEntity;
 import com.netprodex.persistence.mapper.CustomerMapper;
@@ -7,10 +9,12 @@ import com.netprodex.persistence.repository.CustomerPagSortRepository;
 import com.netprodex.persistence.repository.CustomerRepository;
 import com.netprodex.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,14 +52,19 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.isPresent()) {
             return mapper.toCliente(customer.get());
         } else {
-            throw new RuntimeException("Customer not found in BD, with id: " + id);
+            throw new ResourceNotFoundException("customer", "customerId", id);
         }
     }
 
+    @Transactional
     @Override
     public Cliente saveCustomer(Cliente cliente) {
         CustomerEntity customer = mapper.toCustomerEntity(cliente);
-        return mapper.toCliente(this.customerRepository.save(customer));
+        try {
+            return mapper.toCliente(this.customerRepository.save(customer));
+        } catch (DataAccessException exception) {
+            throw new BadRequestException(exception.getMessage());
+        }
     }
 
     @Override
