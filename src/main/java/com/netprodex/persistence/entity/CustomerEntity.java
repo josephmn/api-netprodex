@@ -7,8 +7,10 @@ import lombok.*;
 @Table(name = "customer")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CustomerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
