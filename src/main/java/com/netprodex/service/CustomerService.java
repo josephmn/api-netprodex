@@ -13,4 +13,5 @@ public interface CustomerService {
     Cliente updateCustomer(Cliente customer);
     void deleteCustomer(int id);
     boolean exists(int id);
+    Cliente findByNameIgnoreCase(String name);
 }

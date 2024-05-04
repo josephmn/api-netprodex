@@ -82,4 +82,15 @@ public class CustomerServiceImpl implements CustomerService {
     public boolean exists(int id) {
         return this.customerRepository.existsById(id);
     }
+
+    @Override
+    public Cliente findByNameIgnoreCase(String name) {
+        Optional<CustomerEntity> customer = this.customerRepository.findByNameIgnoreCase(name);
+
+        if (customer.isPresent()) {
+            return mapper.toCliente(customer.get());
+        } else {
+            throw new ResourceNotFoundException("customer", "name", name);
+        }
+    }
 }

@@ -13,6 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class Cliente implements Serializable {
 
     @Schema(description = "Id customer", name = "customerId", type = "Integer", example = "1")
