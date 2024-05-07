@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  api_netprodex:
+    image: api_netprodex:1.0
+    build: .
+    mem_limit: 512m
+    container_name: container-api-netprodex
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:mysql://DBmysql:3306/netprodexDB?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER_NAME: root
+      DB_PASSWORD: Sgr9cl4v3s
+    restart: always
+    depends_on:
+      DBmysql:
+        condition: service_healthy
+  
+  DBmysql:
+    image: mysql:8.3.0
+    container_name: container-mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Sgr9cl4v3s
+      MYSQL_PASSWORD: Sgr9cl4v3s
+      MYSQL_DATABASE: netprodexDB
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+    volumes:
+      - "./my-data/:/var/lib/mysql"
