@@ -1,13 +1,19 @@
-FROM ubuntu:latest AS build
-RUN apt-get update
-RUN apt=get install openjdk-17-jdk -y
-COPY . .
-RUN ./gradlew bootJar --no-daemon
+#FROM ubuntu:22.04 AS build
+#RUN apt-get update
+#RUN apt=get install openjdk-17-jdk -y
+#COPY . .
+#RUN ./gradlew bootJar --no-daemon
 
 FROM openjdk:17-jdk-slim
 ARG JAR_FILE=build/libs/api_netprodex-1.0.jar
+
+# Definir variables de entorno
+ENV DB_URL="jdbc:mysql://db_mysql:3306/netprodexDB?createDatabaseIfNotExist=true"
+ENV DB_USER_NAME="root"
+ENV DB_PASSWORD="password"
+
 COPY ${JAR_FILE} api_netprodex.jar
-EXPOSE 8080
+EXPOSE 8060
 ENTRYPOINT ["java", "-jar", "api_netprodex.jar"]
 
 # # Usa una imagen base de OpenJDK 17

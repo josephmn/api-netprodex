@@ -1,4 +1,4 @@
-[![java](https://img.shields.io/badge/Java-v17.0.3.1-blue)](https://adoptium.net/es/temurin/releases/?os=windows&arch=any&package=jdk&version=17)
+[![java](https://img.shields.io/badge/Java-v17.0.13-blue)](https://adoptium.net/es/temurin/releases/?os=windows&arch=any&package=jdk&version=17)
 ![spring boot](https://img.shields.io/badge/SpringBoot-v3.2.5-blue?logo=springboot)
 [![jpa](https://img.shields.io/badge/Spring_Data_JPA-v3.2.5-blue)](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa/3.2.5)
 [![web](https://img.shields.io/badge/Spring_Boot_Web-v3.2.5-blue)](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web/3.2.5)
@@ -150,6 +150,46 @@ Api creado para registro de clientes para BD MySQL, CRUD JPA, documentación Spr
     URL: http://localhost:8090/api/v1/customer/delete/11
     ````
 
+## Para ejecutar con Docker
+Como se esta usando Gradle:
+
+1. Limpiar el proyecto con el siguiente comando:
+   ```
+   ./gradlew clean
+   ```
+2. Compilar el proyecto:
+   ```
+   ./gradlew build
+   ```
+3. Si el paso anterior fue exitoso, crear la imagen de Docker:
+   ```
+   docker build . -t api-netprodex:1.0
+   ```
+4. Ejecutar la imagen de Docker para crear el contenedor:
+
+   (**8060**) -> Puerto de la API en tú máquina local física.
+   (**8080**) -> Puerto de la API en el contenedor. Este debe ser el mismo puerto que se usa en el **application.properties**.
+   => server.port=8080
+
+   Ejecución en Windows:
+   ```
+    docker run -p 8060:8080 -d --name api-netprodex `
+    --network databases `
+    -e "DB_URL=jdbc:mysql://db_mysql:3306/netprodexDB?createDatabaseIfNotExist=true" `
+    -e "DB_USER=root" `
+    -e "DB_PASSWORD=password" `
+    api-netprodex:1.0
+   ```
+   Ejecución en Linux:
+    ```
+   docker run -p 8060:8080 -d --name api-netprodex \
+   --network databases \
+   -e DB_URL=jdbc:mysql://db_mysql:3306/netprodexDB?createDatabaseIfNotExist=true \
+   -e DB_USER=root \
+   -e DB_PASSWORD=password \
+   api-netprodex:1.0
+   ```
+   
 ## Recomendaciones
 
 - El aplicativo aun esta en desarrollo, se sigue implementando nuevas librerías y actualizaciones.

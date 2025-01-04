@@ -9,9 +9,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_URL: jdbc:mysql://DBmysql:3306/netprodexDB?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_URL: jdbc:mysql://localhost:3306/apinetprodex?createDatabaseIfNotExist=true
       DB_USER_NAME: root
-      DB_PASSWORD: Sgr9cl4v3s
+      DB_PASSWORD: password
     restart: always
     depends_on:
       DBmysql:

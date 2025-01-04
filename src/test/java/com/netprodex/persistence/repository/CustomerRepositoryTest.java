@@ -52,7 +52,7 @@ class CustomerRepositoryTest {
         assertTrue(customerOptional.isPresent(), "customer not found");
 
         CustomerEntity customer = customerOptional.get();
-        assertEquals(customer.getName(), "John");
+        assertEquals("John", customer.getName());
         System.out.println("customer: " + customer);
     }
 
