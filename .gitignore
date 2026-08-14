@@ -40,3 +40,6 @@ out/
 build/*
 !build/libs/
 my-data/
+
+#### Files ###
+*.env
