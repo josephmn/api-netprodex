@@ -4,7 +4,7 @@
 #COPY . .
 #RUN ./gradlew bootJar --no-daemon
 
-FROM openjdk:17-jdk-slim
+FROM openjdk:17.0.1-jdk-slim
 ARG JAR_FILE=build/libs/api_netprodex-1.0.jar
 
 # Definir variables de entorno
@@ -13,7 +13,7 @@ ENV DB_USER_NAME="root"
 ENV DB_PASSWORD="password"
 
 COPY ${JAR_FILE} api_netprodex.jar
-EXPOSE 8060
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "api_netprodex.jar"]
 
 # # Usa una imagen base de OpenJDK 17

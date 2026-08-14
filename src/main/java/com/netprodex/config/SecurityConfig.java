@@ -13,33 +13,24 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // para configurar por anotaciones
-@SecurityScheme(name="BearerAuth", scheme="bearer", type = SecuritySchemeType.HTTP, bearerFormat="JWT", in = SecuritySchemeIn.HEADER)
+@SecurityScheme(name = "BearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", in = SecuritySchemeIn.HEADER)
 public class SecurityConfig {
 
     private final JwtUtils jwtUtils;
@@ -49,7 +40,8 @@ public class SecurityConfig {
         this.jwtUtils = jwtUtils;
     }
 
-    /** SECURITY FILTER CHAIN
+    /**
+     * SECURITY FILTER CHAIN
      * Aqui se colocan las condiciones de seguridad
      * csrf -> Cross-site request forgery (La falsificación de petición en sitios cruzados) - vulnerabilidad Web
      * httpBasic -> usado solo para user y password
@@ -58,31 +50,31 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable) //disable csrf
-                //.httpBasic(Customizer.withDefaults())
-                .sessionManagement(sets -> sets.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(http -> {
-                        http.requestMatchers(publicEndpoints()).permitAll();
-                        // Configure endpoint public
-                        http.requestMatchers("/api/v1/auth/**").permitAll();
-                        http.requestMatchers(HttpMethod.GET, "/api/v1/customer/**").hasAnyRole("ADMIN","USER","INVITED","DEVELOPER");
-                        http.requestMatchers(HttpMethod.POST, "/api/v1/customer/**").hasAnyRole("ADMIN","DEVELOPER");
-                        http.requestMatchers(HttpMethod.PUT, "/api/v1/customer/**").hasAnyRole("ADMIN","DEVELOPER");
-                        http.requestMatchers(HttpMethod.DELETE, "/api/v1/customer/**").hasAnyRole("ADMIN","DEVELOPER");
-                        // Configure endpoint private
-                        // http.requestMatchers(HttpMethod.POST, "/api/v1/customer/*").hasAuthority("CREATE");
-                        // Configure all endpoint not specific
-                        // http.anyRequest().authenticated(); -> no recomendado, trabaja con autenticacion
-                        http.anyRequest().denyAll();
-                })
-                .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
-                .build();
+            .csrf(AbstractHttpConfigurer::disable) //disable csrf
+            //.httpBasic(Customizer.withDefaults())
+            .sessionManagement(sets -> sets.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(http -> {
+                http.requestMatchers(publicEndpoints()).permitAll();
+                // Configure endpoint public
+                http.requestMatchers("/api/v1/auth/**").permitAll();
+                http.requestMatchers(HttpMethod.GET, "/api/v1/customer/**").hasAnyRole("ADMIN", "USER", "INVITED", "DEVELOPER");
+                http.requestMatchers(HttpMethod.POST, "/api/v1/customer/**").hasAnyRole("ADMIN", "DEVELOPER");
+                http.requestMatchers(HttpMethod.PUT, "/api/v1/customer/**").hasAnyRole("ADMIN", "DEVELOPER");
+                http.requestMatchers(HttpMethod.DELETE, "/api/v1/customer/**").hasAnyRole("ADMIN", "DEVELOPER");
+                // Configure endpoint private
+                // http.requestMatchers(HttpMethod.POST, "/api/v1/customer/*").hasAuthority("CREATE");
+                // Configure all endpoint not specific
+                // http.anyRequest().authenticated(); -> no recomendado, trabaja con autenticacion
+                http.anyRequest().denyAll();
+            })
+            .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
+            .build();
     }
 
     private RequestMatcher publicEndpoints() {
         return new OrRequestMatcher(
-                new AntPathRequestMatcher("/v3/api-docs/**"),
-                new AntPathRequestMatcher("/swagger-ui/**")
+            new AntPathRequestMatcher("/v3/api-docs/**"),
+            new AntPathRequestMatcher("/swagger-ui/**")
         );
     }
 
@@ -95,7 +87,8 @@ public class SecurityConfig {
                 .build();
     }*/
 
-    /** AUTHENTICATION MANAGER
+    /**
+     * AUTHENTICATION MANAGER
      *
      */
     @Bean
@@ -103,7 +96,8 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    /** AUTHENTICATION PROVIDER
+    /**
+     * AUTHENTICATION PROVIDER
      * Necesario: PasswordEncoder y UserDetailsService
      */
     @Bean
@@ -136,7 +130,8 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(userDetailsList);
     }*/
 
-    /** PasswordEncoder
+    /**
+     * PasswordEncoder
      * NoOpPasswordEncoder -> solo para test o pruebas
      */
     @Bean
